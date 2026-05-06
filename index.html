@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বই প্রকৌশলী | Boi Prokousholi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208; --paper: #fdf8f0; --cream: #f5ede0;
+    --amber: #c8811a; --amber-light: #f0c060; --amber-dark: #8a560e;
+    --red: #c0392b; --muted: #7a6a55; --border: #e2d5c0;
+    --white: #ffffff; --shadow: 0 2px 20px rgba(26,18,8,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans','Hind Siliguri',sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; }
+
+  nav { background: var(--ink); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; height: 64px; }
+  .logo { display: flex; flex-direction: column; line-height: 1.1; }
+  .logo-bn { font-family: 'Hind Siliguri',sans-serif; font-size: 20px; font-weight: 700; color: var(--amber-light); }
+  .logo-en { font-size: 10px; color: #a09080; letter-spacing: 2px; text-transform: uppercase; }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .lang-toggle { background: transparent; border: 1px solid #555; color: #ccc; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+  .lang-toggle:hover { border-color: var(--amber-light); color: var(--amber-light); }
+  .cart-btn { background: var(--amber); color: var(--white); border: none; padding: 8px 20px; border-radius: 24px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+  .cart-btn:hover { background: var(--amber-dark); }
+  .cart-count { background: var(--red); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+
+  .hero { background: var(--ink); padding: 80px 5% 60px; display: flex; align-items: center; gap: 60px; overflow: hidden; position: relative; }
+  .hero::before { content: '📚'; position: absolute; font-size: 300px; right: -40px; top: -40px; opacity: 0.04; pointer-events: none; }
+  .hero-text { flex: 1; }
+  .hero-tag { display: inline-block; background: rgba(200,129,26,0.2); color: var(--amber-light); padding: 4px 14px; border-radius: 20px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
+  .hero h1 { font-family: 'Playfair Display',serif; font-size: clamp(32px,5vw,52px); color: var(--white); line-height: 1.15; margin-bottom: 8px; }
+  .hero h1 span { color: var(--amber-light); }
+  .hero-sub { font-family: 'Hind Siliguri',sans-serif; font-size: 18px; color: #b0a090; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--amber); color: var(--white); border: none; padding: 14px 28px; border-radius: 28px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { background: var(--amber-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--white); border: 1px solid #555; padding: 14px 28px; border-radius: 28px; font-size: 15px; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-outline:hover { border-color: var(--amber-light); color: var(--amber-light); }
+  .hero-stats { display: flex; flex-direction: column; gap: 16px; min-width: 180px; }
+  .stat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-num { font-family: 'Playfair Display',serif; font-size: 36px; color: var(--amber-light); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 12px; color: #a09080; }
+
+  .section { padding: 56px 5%; }
+  .section-title-sub { font-family: 'Hind Siliguri',sans-serif; font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .section-title { font-family: 'Playfair Display',serif; font-size: 28px; color: var(--ink); margin-bottom: 28px; }
+  .cats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+  .cat { padding: 8px 20px; border-radius: 24px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; cursor: pointer; transition: all 0.2s; font-family: 'Hind Siliguri',sans-serif; }
+  .cat:hover, .cat.active { background: var(--amber); border-color: var(--amber); color: var(--white); }
+
+  .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 20px; }
+  .book-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .book-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .book-cover { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 56px; position: relative; }
+  .book-badge { position: absolute; top: 10px; left: 10px; background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .book-info { padding: 14px; }
+  .book-title { font-family: 'Hind Siliguri',sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; line-height: 1.3; }
+  .book-author { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .book-footer { display: flex; align-items: center; justify-content: space-between; }
+  .book-price { font-size: 16px; font-weight: 700; color: var(--amber-dark); }
+  .add-to-cart { background: var(--amber); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .add-to-cart:hover { background: var(--amber-dark); transform: scale(1.1); }
+
+  .delivery-banner { background: linear-gradient(135deg,#1a1208,#2d1f0e); margin: 0 5%; border-radius: 16px; padding: 32px 40px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .delivery-icon { font-size: 48px; }
+  .delivery-text { flex: 1; }
+  .delivery-text h3 { font-family: 'Hind Siliguri',sans-serif; font-size: 20px; color: var(--amber-light); margin-bottom: 4px; }
+  .delivery-text p { font-size: 14px; color: #a09080; }
+  .delivery-btn { background: var(--amber); color: white; border: none; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+  .delivery-btn:hover { background: var(--amber-dark); }
+
+  .order-section { background: var(--cream); border-top: 1px solid var(--border); padding: 60px 5%; }
+  .order-container { max-width: 700px; margin: 0 auto; }
+  .order-header { text-align: center; margin-bottom: 40px; }
+  .order-header h2 { font-family: 'Playfair Display',serif; font-size: 32px; color: var(--ink); margin-bottom: 8px; }
+  .order-header p { color: var(--muted); font-size: 15px; }
+  .form-card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 36px; }
+  .form-section-title { font-family: 'Hind Siliguri',sans-serif; font-size: 14px; font-weight: 600; color: var(--amber-dark); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 13px; font-weight: 500; color: var(--ink); font-family: 'Hind Siliguri',sans-serif; }
+  input, select, textarea { border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; font-family: 'DM Sans','Hind Siliguri',sans-serif; color: var(--ink); background: var(--paper); transition: border-color 0.2s; outline: none; width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: var(--amber); }
+  textarea { resize: vertical; min-height: 80px; }
+  .cart-summary { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 24px 0; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .cart-item:last-of-type { border-bottom: none; }
+  .cart-item-name { font-family: 'Hind Siliguri',sans-serif; }
+  .cart-item-price { font-weight: 600; color: var(--amber-dark); }
+  .cart-item-remove { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; padding: 0 8px; }
+  .cart-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; padding-top: 12px; border-top: 2px solid var(--border); margin-top: 8px; }
+  .empty-cart { text-align: center; color: var(--muted); padding: 20px 0; font-size: 14px; }
+  .submit-order { width: 100%; background: var(--amber); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-family: 'Hind Siliguri',sans-serif; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 24px; }
+  .submit-order:hover { background: var(--amber-dark); transform: translateY(-1px); }
+  .submit-order:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+  .success-msg { display: none; background: #e8f5e9; border: 1px solid #81c784; border-radius: 12px; padding: 24px; text-align: center; margin-top: 20px; }
+  .success-msg h3 { color: #2e7d32; font-family: 'Hind Siliguri',sans-serif; margin-bottom: 8px; }
+  .success-msg p { color: #388e3c; font-size: 14px; }
+
+  footer { background: var(--ink); color: #a09080; padding: 40px 5%; }
+  .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+  .footer-brand p { font-size: 14px; margin-top: 12px; line-height: 1.7; color: #7a6a55; }
+  .footer-col h4 { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: #6a5a45; margin-bottom: 14px; }
+  .footer-col a { display: block; font-size: 14px; color: #9a8a75; text-decoration: none; margin-bottom: 8px; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--amber-light); }
+  .footer-bottom { border-top: 1px solid #2a2010; padding-top: 20px; font-size: 12px; display: flex; justify-content: space-between; }
+
+  .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
+  .cart-overlay.open { display: block; }
+  .cart-panel { position: fixed; right: -420px; top: 0; bottom: 0; width: 380px; background: var(--white); z-index: 201; transition: right 0.3s; display: flex; flex-direction: column; box-shadow: -4px 0 30px rgba(0,0,0,0.15); }
+  .cart-panel.open { right: 0; }
+  .cart-panel-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .cart-panel-header h3 { font-family: 'Hind Siliguri',sans-serif; font-size: 18px; }
+  .close-cart { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--muted); }
+  .cart-panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .cart-panel-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
+  .cart-total-panel { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .checkout-btn { width: 100%; background: var(--amber); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-family: 'Hind Siliguri',sans-serif; font-weight: 600; cursor: pointer; }
+  .checkout-btn:hover { background: var(--amber-dark); }
+
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--ink); color: var(--white); padding: 12px 24px; border-radius: 30px; font-size: 14px; z-index: 300; transition: transform 0.3s; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 768px) {
+    .hero { flex-direction: column; gap: 40px; padding: 50px 5% 40px; }
+    .hero-stats { flex-direction: row; min-width: unset; width: 100%; }
+    .stat-card { flex: 1; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+    .cart-panel { width: 100%; }
+    .delivery-banner { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <span class="logo-bn">বই প্রকৌশলী</span>
+    <span class="logo-en">Boi Prokousholi</span>
+  </div>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()">EN / বাং</button>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 <span data-lang="bn">কার্ট</span><span data-lang="en" style="display:none">Cart</span>
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-tag" data-lang="bn">বাংলাদেশ জুড়ে ডেলিভারি</div>
+    <div class="hero-tag" data-lang="en" style="display:none">Delivery across Bangladesh</div>
+    <h1>
+      <span data-lang="bn">আপনার পছন্দের <span style="color:var(--amber-light)">বই</span>,<br>দরজায় পৌঁছে দিই</span>
+      <span data-lang="en" style="display:none">Your favourite <span style="color:var(--amber-light)">books</span>,<br>delivered to your door</span>
+    </h1>
+    <p class="hero-sub" data-lang="bn">সব ধরনের বই — বাংলা সাহিত্য, একাডেমিক, ইসলামিক, শিশুতোষ এবং আরও অনেক কিছু</p>
+    <p class="hero-sub" data-lang="en" style="display:none">All kinds of books — Bangla literature, academic, Islamic, children's and much more</p>
+    <div class="hero-actions">
+      <a href="#books" class="btn-primary" data-lang="bn">বই দেখুন</a>
+      <a href="#books" class="btn-primary" data-lang="en" style="display:none">Browse Books</a>
+      <a href="#order" class="btn-outline" data-lang="bn">অর্ডার করুন</a>
+      <a href="#order" class="btn-outline" data-lang="en" style="display:none">Order Now</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-num">৩০০০+</div>
+      <div class="stat-label" data-lang="bn">বইয়ের সংগ্রহ</div>
+      <div class="stat-label" data-lang="en" style="display:none">Books available</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">৪৮h</div>
+      <div class="stat-label" data-lang="bn">দ্রুত ডেলিভারি</div>
+      <div class="stat-label" data-lang="en" style="display:none">Fast delivery</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="books">
+  <span class="section-title-sub" data-lang="bn">আমাদের সংগ্রহ</span>
+  <span class="section-title-sub" data-lang="en" style="display:none">OUR COLLECTION</span>
+  <h2 class="section-title" data-lang="bn">বই বিভাগ</h2>
+  <h2 class="section-title" data-lang="en" style="display:none">Browse Books</h2>
+  <div class="cats" id="cats">
+    <button class="cat active" data-cat="all"      data-bn="সব বই"        data-en="All Books"         onclick="filterCat(this)">সব বই</button>
+    <button class="cat"        data-cat="bangla"   data-bn="বাংলা সাহিত্য" data-en="Bangla Literature" onclick="filterCat(this)">বাংলা সাহিত্য</button>
+    <button class="cat"        data-cat="academic" data-bn="একাডেমিক"     data-en="Academic"          onclick="filterCat(this)">একাডেমিক</button>
+    <button class="cat"        data-cat="islamic"  data-bn="ইসলামিক"      data-en="Islamic"           onclick="filterCat(this)">ইসলামিক</button>
+    <button class="cat"        data-cat="children" data-bn="শিশুতোষ"      data-en="Children"          onclick="filterCat(this)">শিশুতোষ</button>
+    <button class="cat"        data-cat="selfhelp" data-bn="সেলফ হেল্প"   data-en="Self Help"         onclick="filterCat(this)">সেলফ হেল্প</button>
+    <button class="cat"        data-cat="science"  data-bn="বিজ্ঞান"      data-en="Science"           onclick="filterCat(this)">বিজ্ঞান</button>
+    <button class="cat"        data-cat="english"  data-bn="ইংরেজি বই"    data-en="English Books"     onclick="filterCat(this)">ইংরেজি বই</button>
+  </div>
+  <div class="books-grid" id="books-grid"></div>
+</section>
+
+<div class="delivery-banner">
+  <div class="delivery-icon">🚚</div>
+  <div class="delivery-text">
+    <h3 data-lang="bn">RedX-এর মাধ্যমে সারা বাংলাদেশে ডেলিভারি</h3>
+    <h3 data-lang="en" style="display:none">Delivery across Bangladesh via RedX</h3>
+    <p data-lang="bn">অর্ডার করুন, বাকিটা আমাদের দায়িত্ব — ঘরে বসে বই পান</p>
+    <p data-lang="en" style="display:none">Order online and we handle the rest — books delivered to your home</p>
+  </div>
+  <button class="delivery-btn" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">
+    <span data-lang="bn">এখনই অর্ডার করুন</span>
+    <span data-lang="en" style="display:none">Order Now</span>
+  </button>
+</div>
+
+<section class="order-section" id="order">
+  <div class="order-container">
+    <div class="order-header">
+      <h2 data-lang="bn">অর্ডার করুন</h2>
+      <h2 data-lang="en" style="display:none">Place Your Order</h2>
+      <p data-lang="bn">আপনার তথ্য দিন, আমরা দ্রুত পৌঁছে দেব</p>
+      <p data-lang="en" style="display:none">Fill in your details and we'll deliver quickly</p>
+    </div>
+    <div class="form-card">
+      <div class="form-section-title">
+        <span data-lang="bn">আপনার কার্ট</span><span data-lang="en" style="display:none">Your Cart</span>
+      </div>
+      <div class="cart-summary">
+        <div id="form-cart-items">
+          <div class="empty-cart">
+            <span data-lang="bn">কার্ট খালি। উপরে বই যোগ করুন।</span>
+            <span data-lang="en" style="display:none">Cart is empty. Add books above.</span>
+          </div>
+        </div>
+        <div class="cart-total" id="form-cart-total" style="display:none">
+          <span data-lang="bn">মোট</span><span data-lang="en" style="display:none">Total</span>
+          <span id="form-total-amount">৳ 0</span>
+        </div>
+      </div>
+      <div class="form-section-title" style="margin-top:24px">
+        <span data-lang="bn">আপনার তথ্য</span><span data-lang="en" style="display:none">Your Information</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-lang="bn">আপনার নাম *</label><label data-lang="en" style="display:none">Full Name *</label>
+          <input type="text" id="cust-name" placeholder="নাম লিখুন">
+        </div>
+        <div class="form-group">
+          <label data-lang="bn">মোবাইল নম্বর *</label><label data-lang="en" style="display:none">Mobile Number *</label>
+          <input type="tel" id="cust-phone" placeholder="01XXXXXXXXX">
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label data-lang="bn">ডেলিভারি ঠিকানা *</label><label data-lang="en" style="display:none">Delivery Address *</label>
+          <textarea id="cust-address" placeholder="বাড়ি নং, রাস্তা, এলাকা, জেলা"></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-lang="bn">জেলা *</label><label data-lang="en" style="display:none">District *</label>
+          <select id="cust-district">
+            <option value="">-- জেলা বেছে নিন --</option>
+            <option>ঢাকা / Dhaka</option><option>চট্টগ্রাম / Chattogram</option>
+            <option>রাজশাহী / Rajshahi</option><option>খুলনা / Khulna</option>
+            <option>সিলেট / Sylhet</option><option>বরিশাল / Barishal</option>
+            <option>রংপুর / Rangpur</option><option>ময়মনসিংহ / Mymensingh</option>
+            <option>কুমিল্লা / Cumilla</option><option>গাজীপুর / Gazipur</option>
+            <option>নারায়ণগঞ্জ / Narayanganj</option><option>অন্যান্য / Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-lang="bn">পেমেন্ট পদ্ধতি</label><label data-lang="en" style="display:none">Payment Method</label>
+          <select id="cust-payment">
+            <option value="cod">ক্যাশ অন ডেলিভারি</option>
+            <option value="bkash">বিকাশ</option>
+            <option value="nagad">নগদ</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label data-lang="bn">বিশেষ নির্দেশনা (ঐচ্ছিক)</label><label data-lang="en" style="display:none">Special Instructions (optional)</label>
+          <textarea id="cust-note" placeholder="যেকোনো বিশেষ নির্দেশনা..." style="min-height:60px"></textarea>
+        </div>
+      </div>
+      <button class="submit-order" onclick="submitOrder()">
+        <span data-lang="bn">✓ অর্ডার নিশ্চিত করুন</span>
+        <span data-lang="en" style="display:none">✓ Confirm Order</span>
+      </button>
+      <div class="success-msg" id="success-msg">
+        <h3 data-lang="bn">✓ অর্ডার সফলভাবে গ্রহণ হয়েছে!</h3>
+        <h3 data-lang="en" style="display:none">✓ Order placed successfully!</h3>
+        <p data-lang="bn">আপনার অর্ডার গ্রহণ হয়েছে। শীঘ্রই যোগাযোগ করা হবে।</p>
+        <p data-lang="en" style="display:none">Your order has been received. We will contact you shortly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="logo-bn">বই প্রকৌশলী</span>
+        <span class="logo-en">Boi Prokousholi</span>
+      </div>
+      <p data-lang="bn">সব ধরনের বই, সারা বাংলাদেশে ডেলিভারি। আমাদের Facebook পেজে যোগ দিন।</p>
+      <p data-lang="en" style="display:none">All kinds of books, delivered across Bangladesh. Join our Facebook page.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-lang="bn">বিভাগ</h4><h4 data-lang="en" style="display:none">Categories</h4>
+      <a href="#books">বাংলা সাহিত্য</a>
+      <a href="#books">একাডেমিক</a>
+      <a href="#books">ইসলামিক</a>
+      <a href="#books">শিশুতোষ</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-lang="bn">যোগাযোগ</h4><h4 data-lang="en" style="display:none">Contact</h4>
+      <a href="https://facebook.com/boipcom" target="_blank">Facebook Page</a>
+      <a href="#order" data-lang="bn">অর্ডার করুন</a>
+      <a href="#order" data-lang="en" style="display:none">Place Order</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 বই প্রকৌশলী | Boi Prokousholi</span>
+    <span>Powered by RedX Delivery</span>
+  </div>
+</footer>
+
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-panel-header">
+    <h3>🛒 <span data-lang="bn">আপনার কার্ট</span><span data-lang="en" style="display:none">Your Cart</span></h3>
+    <button class="close-cart" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-panel-body" id="cart-panel-body">
+    <div class="empty-cart"><span data-lang="bn">কার্ট খালি</span><span data-lang="en" style="display:none">Cart is empty</span></div>
+  </div>
+  <div class="cart-panel-footer">
+    <div class="cart-total-panel">
+      <span data-lang="bn">মোট:</span><span data-lang="en" style="display:none">Total:</span>
+      <span id="panel-total">৳ 0</span>
+    </div>
+    <button class="checkout-btn" onclick="closeCart();document.getElementById('order').scrollIntoView({behavior:'smooth'})">
+      <span data-lang="bn">অর্ডার করতে যান →</span><span data-lang="en" style="display:none">Proceed to Order →</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ✏️  EASY CONTENT EDITING — Only change things in this area  ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// ── Step 1: Paste your Google Sheet URL here (see guide below) ──
+const GOOGLE_SHEET_URL = 'YOUR_GOOGLE_SHEET_URL_HERE';
+
+// ── Step 2: Edit your book list ──
+// Fields: id, titleBn (Bangla), titleEn (English), author, price,
+//   cat (bangla/academic/islamic/children/selfhelp/science/english),
+//   color (hex), emoji, badge ('bestseller'/'popular'/'')
+const books = [
+  { id:1,  titleBn:'পথের পাঁচালী',       titleEn:'Pather Panchali',       author:'বিভূতিভূষণ',         price:320, cat:'bangla',   color:'#fff8e8', emoji:'📖', badge:'bestseller' },
+  { id:2,  titleBn:'শেষের কবিতা',        titleEn:'Shesher Kobita',        author:'রবীন্দ্রনাথ ঠাকুর',   price:280, cat:'bangla',   color:'#f0f4ff', emoji:'📕', badge:'' },
+  { id:3,  titleBn:'আগুনের পরশমণি',      titleEn:'Aguner Parashmoni',     author:'হুমায়ূন আহমেদ',       price:350, cat:'bangla',   color:'#fff3f0', emoji:'📗', badge:'popular' },
+  { id:4,  titleBn:'HSC পদার্থবিজ্ঞান',  titleEn:'HSC Physics',           author:'হায়দার আলী',          price:420, cat:'academic', color:'#f0fff4', emoji:'📘', badge:'' },
+  { id:5,  titleBn:'কুরআন শরীফ (বাংলা)', titleEn:'Quran Sharif (Bangla)', author:'',                    price:550, cat:'islamic',  color:'#f5fff0', emoji:'📚', badge:'' },
+  { id:6,  titleBn:'রিয়াদুস সালেহীন',    titleEn:'Riyad us Saliheen',     author:'ইমাম নববী',           price:380, cat:'islamic',  color:'#f0f8f0', emoji:'📙', badge:'' },
+  { id:7,  titleBn:'ছোটদের রাজকুমার',    titleEn:'The Little Prince',     author:'সাঁত-একজুপেরি',       price:220, cat:'children', color:'#fffbf0', emoji:'🌟', badge:'' },
+  { id:8,  titleBn:'অদ্ভুত সব গল্প',     titleEn:'Amazing Stories',       author:'মুহম্মদ জাফর ইকবাল', price:260, cat:'children', color:'#fff0fb', emoji:'✨', badge:'popular' },
+  { id:9,  titleBn:'অ্যাটমিক হ্যাবিটস',  titleEn:'Atomic Habits',         author:'জেমস ক্লিয়ার',        price:450, cat:'selfhelp', color:'#f0f8ff', emoji:'💡', badge:'bestseller' },
+  { id:10, titleBn:'ভাবুন ও বড় হন',      titleEn:'Think and Grow Rich',   author:'নেপোলিয়ন হিল',       price:320, cat:'selfhelp', color:'#fff8f0', emoji:'🚀', badge:'' },
+  { id:11, titleBn:'বিজ্ঞানের জগতে',     titleEn:'Into the Science World', author:'আব্দুল্লাহ আল মুতী', price:290, cat:'science',  color:'#f0faff', emoji:'🔭', badge:'' },
+  { id:12, titleBn:'The Alchemist',       titleEn:'The Alchemist',         author:'Paulo Coelho',        price:380, cat:'english',  color:'#fff5f0', emoji:'⭐', badge:'popular' },
+];
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ⚙️  APP LOGIC — Do not change anything below this line      ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+let cart = [], currentLang = 'bn', currentCat = 'all';
+
+function renderBooks() {
+  const filtered = currentCat === 'all' ? books : books.filter(b => b.cat === currentCat);
+  document.getElementById('books-grid').innerHTML = filtered.map(b => `
+    <div class="book-card">
+      <div class="book-cover" style="background:${b.color}">
+        ${b.badge ? `<div class="book-badge">${b.badge==='bestseller'?'🔥 Best':'⭐ Hot'}</div>` : ''}
+        <span style="font-size:52px">${b.emoji}</span>
+      </div>
+      <div class="book-info">
+        <div class="book-title">${currentLang==='bn'?b.titleBn:b.titleEn}</div>
+        <div class="book-author">${b.author}</div>
+        <div class="book-footer">
+          <div class="book-price">৳ ${b.price}</div>
+          <button class="add-to-cart" onclick="addToCart(${b.id})">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function addToCart(id) {
+  const book = books.find(b => b.id === id);
+  const ex = cart.find(c => c.id === id);
+  ex ? ex.qty++ : cart.push({...book, qty:1});
+  updateCart();
+  showToast(currentLang==='bn' ? `"${book.titleBn}" কার্টে যোগ হয়েছে` : `"${book.titleEn}" added to cart`);
+}
+
+function removeFromCart(id) { cart = cart.filter(c => c.id !== id); updateCart(); }
+
+function updateCart() {
+  const total = cart.reduce((s,c) => s + c.price*c.qty, 0);
+  const count = cart.reduce((s,c) => s + c.qty, 0);
+  document.getElementById('cart-count').textContent = count;
+  document.getElementById('panel-total').textContent = '৳ ' + total;
+
+  const itemsHtml = cart.length === 0
+    ? `<div class="empty-cart">${currentLang==='bn'?'কার্ট খালি':'Cart is empty'}</div>`
+    : cart.map(c => `
+        <div class="cart-item">
+          <span class="cart-item-name">${currentLang==='bn'?c.titleBn:c.titleEn}${c.qty>1?' ×'+c.qty:''}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="cart-item-price">৳ ${c.price*c.qty}</span>
+            <button class="cart-item-remove" onclick="removeFromCart(${c.id})">×</button>
+          </div>
+        </div>`).join('');
+
+  document.getElementById('cart-panel-body').innerHTML = itemsHtml;
+  document.getElementById('form-cart-items').innerHTML = cart.length === 0
+    ? `<div class="empty-cart">${currentLang==='bn'?'কার্ট খালি। উপরে বই যোগ করুন।':'Cart is empty. Add books above.'}</div>`
+    : itemsHtml;
+
+  const ft = document.getElementById('form-cart-total');
+  ft.style.display = cart.length ? 'flex' : 'none';
+  document.getElementById('form-total-amount').textContent = '৳ ' + total;
+}
+
+function openCart()  { document.getElementById('cart-overlay').classList.add('open');    document.getElementById('cart-panel').classList.add('open'); }
+function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-panel').classList.remove('open'); }
+
+function filterCat(btn) {
+  document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  renderBooks();
+}
+
+function submitOrder() {
+  const name    = document.getElementById('cust-name').value.trim();
+  const phone   = document.getElementById('cust-phone').value.trim();
+  const address = document.getElementById('cust-address').value.trim();
+  const district= document.getElementById('cust-district').value;
+  const payment = document.getElementById('cust-payment').value;
+  const note    = document.getElementById('cust-note').value.trim();
+
+  if (cart.length === 0)          { showToast(currentLang==='bn'?'প্রথমে কার্টে বই যোগ করুন':'Please add books to cart first'); return; }
+  if (!name||!phone||!address||!district) { showToast(currentLang==='bn'?'সব তথ্য পূরণ করুন':'Please fill all required fields'); return; }
+  if (!/^01[0-9]{9}$/.test(phone))       { showToast(currentLang==='bn'?'সঠিক মোবাইল নম্বর দিন':'Enter a valid mobile number'); return; }
+
+  const total     = cart.reduce((s,c) => s+c.price*c.qty, 0);
+  const itemsList = cart.map(c => `${c.titleBn} x${c.qty} (৳${c.price*c.qty})`).join(' | ');
+  const orderTime = new Date().toLocaleString('en-BD');
+
+  const btn = document.querySelector('.submit-order');
+  btn.disabled = true;
+  btn.textContent = currentLang==='bn' ? 'পাঠানো হচ্ছে...' : 'Sending...';
+
+  // ── Send order to Google Sheet ──
+  if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'YOUR_GOOGLE_SHEET_URL_HERE') {
+    const params = new URLSearchParams({ name, phone, address, district, payment, items: itemsList, total: '৳ '+total, note, time: orderTime });
+    fetch(GOOGLE_SHEET_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
+  }
+
+  // ── RedX API — uncomment and add your key when ready ──
+  // fetch('https://openapi.redx.com.bd/v1.0.0-beta/parcel', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type':'application/json', 'API-ACCESS-TOKEN':'Bearer YOUR_REDX_KEY' },
+  //   body: JSON.stringify({
+  //     name, phone,
+  //     address: address + ', ' + district,
+  //     merchant_invoice_id: 'BP-' + Date.now(),
+  //     cash_collection_amount: total,
+  //     parcel_details: itemsList
+  //   })
+  // });
+
+  setTimeout(() => {
+    document.getElementById('success-msg').style.display = 'block';
+    btn.style.display = 'none';
+    cart = [];
+    updateCart();
+    ['cust-name','cust-phone','cust-address','cust-note'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('cust-district').value = '';
+  }, 1200);
+}
+
+function toggleLang() {
+  currentLang = currentLang==='bn' ? 'en' : 'bn';
+  document.querySelectorAll('[data-lang]').forEach(el => { el.style.display = el.dataset.lang===currentLang ? '' : 'none'; });
+  document.querySelectorAll('.cat').forEach(b => { b.textContent = currentLang==='bn' ? b.dataset.bn : b.dataset.en; });
+  renderBooks(); updateCart();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderBooks();
+</script>
+</body>
+</html>
