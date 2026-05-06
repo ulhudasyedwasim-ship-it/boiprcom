@@ -359,7 +359,7 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 // ── Step 1: Paste your Google Sheet URL here (see guide below) ──
-const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1CNp9iiOcZTeSlMXO0DmM26xDhXEyuW43EQ7-iWGlW_w/edit?usp=sharing';
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx1PbId4BsE_CM0CCZaY2cMpe2nrrg9rDUQq-yLBlheEibGsnbegdTXqrrreVPSsZVU/exec';
 
 // ── Step 2: Edit your book list ──
 // Fields: id, titleBn (Bangla), titleEn (English), author, price,
@@ -473,7 +473,7 @@ function submitOrder() {
   btn.textContent = currentLang==='bn' ? 'পাঠানো হচ্ছে...' : 'Sending...';
 
   // ── Send order to Google Sheet ──
-  if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'https://docs.google.com/spreadsheets/d/1CNp9iiOcZTeSlMXO0DmM26xDhXEyuW43EQ7-iWGlW_w/edit?usp=sharing') {
+  if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbx1PbId4BsE_CM0CCZaY2cMpe2nrrg9rDUQq-yLBlheEibGsnbegdTXqrrreVPSsZVU/exec') {
     const params = new URLSearchParams({ name, phone, address, district, payment, items: itemsList, total: '৳ '+total, note, time: orderTime });
     fetch(GOOGLE_SHEET_URL + '?' + params.toString(), { method:'GET', mode:'no-cors' });
   }
